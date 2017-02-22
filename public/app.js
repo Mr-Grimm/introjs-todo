@@ -9,20 +9,23 @@ var TodoList = React.createClass({
            { t.name }
           </div>
           <div className="panel-body">
+            { t.priority }
+          </div>
+          <div className="panel-body">
             { t.description }
           </div>
           <div className="panel-footer">
-            {t.dueDate}
+            { t.dueDate }
             <button className="btn btn-warning"
               onClick={self.props.handleDelete.bind(this, t._id)}>
-              delete 
+              delete
             </button>
 
           </div>
         </div>
         )
     })
-    return ( 
+    return (
       <div>
         <p> { todosList } </p>
       </div>
@@ -35,7 +38,8 @@ var TodoForm = React.createClass({
     return {
       name: '',
       description: '',
-      dueDate: ''
+      dueDate: '',
+      priority:''
     }
   },
   handleNameChange: function(e) {
@@ -53,18 +57,25 @@ var TodoForm = React.createClass({
       dueDate: e.target.value
     })
   },
+  handlePriorityChange: function(e) {
+      this.setState({
+      priority: e.target.value
+      })
+  },
   handleForm: function(e){
     e.preventDefault();
     var name = this.state.name;
     var description = this.state.description;
     var dueDate = this.state.dueDate;
+    var priority = this.state.priority;
     this.props.handleSubmit({
-      name: name, description: description, dueDate: dueDate
+      name: name, description: description, dueDate: dueDate, priority: priority
     });
     this.setState({
       name: '',
       description: '',
-      dueDate: ''
+      dueDate: '',
+      priority:''
     })
   },
   render: function() {
@@ -72,20 +83,29 @@ var TodoForm = React.createClass({
       <div>
         <form onSubmit={this.handleForm} method="" role="form">
           <legend>Add New Todo</legend>
-        
+
           <div className="form-group">
-            <input onChange={this.handleNameChange} value={this.state.name} type="text" className="form-control" id="" placeholder="name"/>
+            <input onChange={this.handleNameChange} value={this.state.name} type="text" className="form-control" id="" placeholder="name" required="required"/>
           </div>
 
           <div className="form-group">
-            <input onChange={this.handleDescriptionChange} value={this.state.description} type="text" className="form-control" id="" placeholder="description"/>
+            <select onChange={this.handleDescriptionChange} value={this.state.description} placeholder="description" className="form-control" id="" type="text">
+                <option value="human">human</option>
+                <option value="student">student</option>
+                <option value="cowboy">cowboy</option>
+              </select>
           </div>
+
+
+          <div className="form-group">
+              <input onChange={this.handlePriorityChange} value={this.state.priority} type="Number" className="form-control" id="" placeholder="priority"/>
+            </div>
 
           <div className="form-group">
             <input onChange={this.handleDueDateChange} value={this.state.dueDate} type="date" className="form-control" id="" placeholder="due date"/>
           </div>
-        
-          <button type="submit" className="btn btn-primary">Submit</button>
+
+          <button type="submit" className="btn btn-primary">submit</button>
         </form>
       </div>
       )
@@ -137,10 +157,10 @@ var App = React.createClass({
     this.loadTodosFromServer();
   },
   render: function() {
-    return ( 
+    return (
       <div>
         <h3> Hello World! </h3>
-        <TodoList handleDelete={ this.handleDelete } 
+        <TodoList handleDelete={ this.handleDelete }
                   todos={ this.state.todos } />
         <TodoForm handleSubmit={this.handleSubmit}/>
       </div>

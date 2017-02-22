@@ -7,6 +7,7 @@ var TodosList = React.createClass({
           <div className="panel-body">
             <h3> { t.name }  </h3>
             <p> { t.description } </p>
+            <p> { t.priority } </p>
           </div>
           <div className="panel-footer">
             <p> Due: { t.dueDate.slice(0,10) } </p>
@@ -27,9 +28,10 @@ var TodosList = React.createClass({
 var TodoForm = React.createClass({
   getInitialState: function() {
     return {
-      name: '', 
-      description: '', 
-      dueDate: ''
+      name: '',
+      description: '',
+      dueDate: '',
+      priority: ''
     };
   },
   handleNameChange: function(e) {
@@ -41,26 +43,30 @@ var TodoForm = React.createClass({
   handleDueDateChange: function(e) {
     this.setState({dueDate: e.target.value});
   },
+  handlePriorityChange: function(e) {
+    this.setState({priority: e.target.value});
+  }
   handleSubmit: function(e){
    e.preventDefault();
     var name = this.state.name.trim();
     var description = this.state.description.trim();
     var dueDate = this.state.dueDate.trim();
-    this.props.onTodoSubmit({name: name, description: description, dueDate: dueDate});
-    this.setState({ name: '', description: '', dueDate: ''});
+    var priority = this.state.priority.trim();
+    this.props.onTodoSubmit({name: name, description: description, dueDate: dueDate, priority: priority});
+    this.setState({ name: '', description: '', dueDate: '', priority: ''});
   },
   render: function() {
     return (
       <div>
         <form onSubmit={this.handleSubmit}>
           <legend>new todo</legend>
-        
+
           <div className="form-group">
             <label htmlFor="">name</label>
             <input type="text" value={this.state.name}
             onChange={this.handleNameChange} className="form-control" id=""/>
           </div>
-        
+
           <div className="form-group">
             <label htmlFor="">description</label>
             <input type="text" value={this.state.description}
@@ -72,7 +78,13 @@ var TodoForm = React.createClass({
             <input type="date" value={this.state.dueDate}
           onChange={this.handleDueDateChange} className="form-control" id=""/>
           </div>
-          
+
+          <div className="form-group">
+            <label htmlFor="">priority</label>
+            <input type="Number" value={this.state.name}
+            onChange={this.handlePriorityChange} className="form-control" id=""/>
+          </div>
+
           <button type="" className="btn btn-primary">Submit</button>
         </form>
       </div>
@@ -124,7 +136,7 @@ var App = React.createClass({
   render: function() {
     return (
       <div>
-        <TodosList 
+        <TodosList
         todos={this.state.todos}
         handleComplete={this.handleComplete}
         />
